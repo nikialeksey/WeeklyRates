@@ -12,7 +12,7 @@ import retrofit2.Response;
 public class RatesPresenter extends MvpBasePresenter<RatesView> {
     private RatesApi api;
 
-    private void load(final boolean pullToRefresh) {
+    public void load(final boolean pullToRefresh) {
         api
                 .rates("2000-01-01", "RUS")
                 .subscribeOn(Schedulers.io())

@@ -18,6 +18,7 @@ public class RatesActivity extends MvpLceActivity<RecyclerView, List<Rate>, Rate
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rates_activity);
+        
     }
 
     @NonNull
@@ -38,6 +39,6 @@ public class RatesActivity extends MvpLceActivity<RecyclerView, List<Rate>, Rate
 
     @Override
     public void loadData(boolean pullToRefresh) {
-
+        getPresenter().load(pullToRefresh);
     }
 }
