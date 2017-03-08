@@ -1,44 +1,46 @@
 package me.nikialeksey.weeklyrates;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
-import com.hannesdorfmann.mosby.mvp.lce.MvpLceActivity;
+import javax.inject.Inject;
 
-import java.util.List;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import me.nikialeksey.weeklyrates.api.entities.Rates;
+import me.nikialeksey.weeklyrates.api.rest.RatesApi;
 
-import me.nikialeksey.weeklyrates.api.entities.Rate;
-import me.nikialeksey.weeklyrates.rates.RatesPresenter;
-import me.nikialeksey.weeklyrates.rates.RatesView;
+public class RatesActivity extends AppCompatActivity {
 
-public class RatesActivity extends MvpLceActivity<RecyclerView, List<Rate>, RatesView, RatesPresenter> {
+    @Inject
+    RatesApi ratesApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rates_activity);
-        
-    }
 
-    @NonNull
-    @Override
-    public RatesPresenter createPresenter() {
-        return new RatesPresenter();
-    }
+        WeeklyRatesApp.getApplicationComponent().inject(this);
 
-    @Override
-    protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
-        return null;
-    }
-
-    @Override
-    public void setData(List<Rate> data) {
-
-    }
-
-    @Override
-    public void loadData(boolean pullToRefresh) {
-        getPresenter().load(pullToRefresh);
+        try {
+            ratesApi.rates("2009-01-01", "RUB")
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<Rates>() {
+                        @Override
+                        public void accept(Rates rates) throws Exception {
+                            Log.d("asdas", rates.getBase());
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            throwable.printStackTrace();
+                            Log.e("asdas", throwable.getMessage());
+                        }
+                    });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+            Log.e("asdas", throwable.getMessage());
+        }
     }
 }

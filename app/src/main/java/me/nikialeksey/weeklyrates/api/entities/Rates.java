@@ -1,12 +1,11 @@
 package me.nikialeksey.weeklyrates.api.entities;
 
 import java.util.Date;
-import java.util.List;
 
 public class Rates {
     private String base;
     private Date date;
-    private List<Rate> rates;
+    //private List<Rate> rates;
 
     public String getBase() {
         return base;
@@ -24,11 +23,11 @@ public class Rates {
         this.date = date;
     }
 
-    public List<Rate> getRates() {
-        return rates;
-    }
-
-    public void setRates(List<Rate> rates) {
-        this.rates = rates;
-    }
+//    public List<Rate> getRates() {
+//        return rates;
+//    }
+//
+//    public void setRates(List<Rate> rates) {
+//        this.rates = rates;
+//    }
 }

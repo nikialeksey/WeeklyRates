@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.nikialeksey.weeklyrates">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".WeeklyRatesApp"
         android:allowBackup="true"
