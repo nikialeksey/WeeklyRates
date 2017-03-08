@@ -17,7 +17,7 @@ public class RatesActivity extends AppCompatActivity {
     RatesApi ratesApi;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rates_activity);
 
@@ -28,17 +28,17 @@ public class RatesActivity extends AppCompatActivity {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<Rates>() {
                         @Override
-                        public void accept(Rates rates) throws Exception {
+                        public void accept(final Rates rates) throws Exception {
                             Log.d("asdas", rates.getBase());
                         }
                     }, new Consumer<Throwable>() {
                         @Override
-                        public void accept(Throwable throwable) throws Exception {
+                        public void accept(final Throwable throwable) throws Exception {
                             throwable.printStackTrace();
                             Log.e("asdas", throwable.getMessage());
                         }
                     });
-        } catch (Throwable throwable) {
+        } catch (final Throwable throwable) {
             throwable.printStackTrace();
             Log.e("asdas", throwable.getMessage());
         }

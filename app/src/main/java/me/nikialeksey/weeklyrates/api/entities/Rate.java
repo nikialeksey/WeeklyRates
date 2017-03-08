@@ -1,25 +1,27 @@
 package me.nikialeksey.weeklyrates.api.entities;
 
-import java.math.BigDecimal;
-import java.util.Currency;
+import io.realm.RealmModel;
+import io.realm.annotations.RealmClass;
 
-public class Rate {
-    private Currency currency;
-    private BigDecimal value;
+@RealmClass
+public class Rate implements RealmModel {
 
-    public Currency getCurrency() {
+    private String currency;
+    private String value;
+
+    public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Currency currency) {
+    public void setCurrency(final String currency) {
         this.currency = currency;
     }
 
-    public BigDecimal getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(BigDecimal value) {
+    public void setValue(final String value) {
         this.value = value;
     }
 }
