@@ -1,16 +1,11 @@
 package me.nikialeksey.weeklyrates.api.deserializers;
 
-import android.annotation.SuppressLint;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -19,8 +14,6 @@ import me.nikialeksey.weeklyrates.api.entities.Rate;
 import me.nikialeksey.weeklyrates.api.entities.Rates;
 
 public class RatesDeserializer extends JsonDeserializer<Rates> {
-    @SuppressLint("SimpleDateFormat")
-    private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     public Rates deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
@@ -41,18 +34,13 @@ public class RatesDeserializer extends JsonDeserializer<Rates> {
             rateList.add(rate);
         }
 
+        final String base = node.get("base").asText();
+        final String date = node.get("date").asText();
+
         final Rates rates = new Rates();
         rates.setRates(rateList);
-
-        final String base = node.get("base").asText();
         rates.setBase(base);
-
-        final String dateRepresentation = node.get("date").asText();
-        try {
-            final Date date = dateFormatter.parse(dateRepresentation);
-            rates.setDate(date);
-        } catch (final ParseException ignored) {
-        }
+        rates.setDate(date);
 
         return rates;
     }

@@ -1,16 +1,17 @@
 package me.nikialeksey.weeklyrates.api.entities;
 
-import java.util.Date;
-
 import io.realm.RealmList;
 import io.realm.RealmModel;
+import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
 
 @RealmClass
 public class Rates implements RealmModel {
 
+    @PrimaryKey
     private String base;
-    private Date date;
+    @PrimaryKey
+    private String date;
     private RealmList<Rate> rates;
 
     public String getBase() {
@@ -21,11 +22,11 @@ public class Rates implements RealmModel {
         this.base = base;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(final Date date) {
+    public void setDate(final String date) {
         this.date = date;
     }
 
