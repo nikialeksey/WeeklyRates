@@ -17,7 +17,7 @@ public class RatesPresenter extends MvpBasePresenter<RatesView> {
 
     public void load(final boolean pullToRefresh) {
         api
-                .rates("2009-01-01", "RUS")
+                .rates("2009-01-01")
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Rates>() {
                     @Override

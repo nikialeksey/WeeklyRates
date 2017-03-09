@@ -8,7 +8,7 @@ import retrofit2.http.Query;
 
 public interface RatesApi {
 
-    @GET("/{date}")
-    Single<Rates> rates(@Path("date") String date, @Query("base") String base);
+    @GET("/{date}?base=RUB")
+    Single<Rates> rates(@Path("date") String date);
 
 }
