@@ -9,18 +9,8 @@ import io.realm.annotations.RealmClass;
 public class Rates implements RealmModel {
 
     @PrimaryKey
-    private String base;
-    @PrimaryKey
     private String date;
     private RealmList<Rate> rates;
-
-    public String getBase() {
-        return base;
-    }
-
-    public void setBase(final String base) {
-        this.base = base;
-    }
 
     public String getDate() {
         return date;

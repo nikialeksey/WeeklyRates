@@ -34,12 +34,10 @@ public class RatesDeserializer extends JsonDeserializer<Rates> {
             rateList.add(rate);
         }
 
-        final String base = node.get("base").asText();
         final String date = node.get("date").asText();
 
         final Rates rates = new Rates();
         rates.setRates(rateList);
-        rates.setBase(base);
         rates.setDate(date);
 
         return rates;
