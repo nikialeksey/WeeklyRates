@@ -15,20 +15,20 @@ import me.nikialeksey.weeklyrates.api.entities.Rate;
 
 public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.RatesHolder> {
 
-    private List<Rate> rates;
+    private final List<Rate> rates;
 
-    public RatesAdapter(List<Rate> rates) {
+    public RatesAdapter(final List<Rate> rates) {
         this.rates = rates;
     }
 
     @Override
-    public RatesHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View rateView = LayoutInflater.from(parent.getContext()).inflate(R.layout.rate_view, parent, false);
+    public RatesHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+        final View rateView = LayoutInflater.from(parent.getContext()).inflate(R.layout.rate_view, parent, false);
         return new RatesHolder(rateView);
     }
 
     @Override
-    public void onBindViewHolder(RatesHolder holder, int position) {
+    public void onBindViewHolder(final RatesHolder holder, final int position) {
         holder.bind(rates.get(position));
     }
 
@@ -42,12 +42,12 @@ public class RatesAdapter extends RecyclerView.Adapter<RatesAdapter.RatesHolder>
         @BindView(R.id.name)
         TextView name;
 
-        RatesHolder(View view) {
+        RatesHolder(final View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
 
-        void bind(Rate rate) {
+        void bind(final Rate rate) {
             name.setText(rate.getCurrency());
         }
     }

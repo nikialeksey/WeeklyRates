@@ -8,9 +8,9 @@ import me.nikialeksey.weeklyrates.WeeklyRatesApp;
 
 @Module
 public class ApplicationModule {
-    private WeeklyRatesApp application;
+    private final WeeklyRatesApp application;
 
-    public ApplicationModule(WeeklyRatesApp application) {
+    public ApplicationModule(final WeeklyRatesApp application) {
         this.application = application;
     }
 

@@ -33,12 +33,12 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         return inflater.inflate(R.layout.rates_fragment, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         WeeklyRatesApp.getApplicationComponent().inject(this);
         ButterKnife.bind(this, view);
@@ -55,7 +55,7 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
     }
 
     @Override
-    public void setData(Rates rates) {
+    public void setData(final Rates rates) {
         ratesView.setAdapter(new RatesAdapter(rates.getRates()));
         ratesRefreshLayout.setRefreshing(false);
     }
