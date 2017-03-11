@@ -10,7 +10,7 @@ import me.nikialeksey.weeklyrates.modules.LocaleModule;
 import me.nikialeksey.weeklyrates.modules.NetworkModule;
 import me.nikialeksey.weeklyrates.modules.PropertiesModule;
 import me.nikialeksey.weeklyrates.rates.RatesFragment;
-import me.nikialeksey.weeklyrates.rates.RatesModule;
+import me.nikialeksey.weeklyrates.rates.impl.RatesHolder;
 
 @Singleton
 @Component(modules = {
@@ -18,12 +18,13 @@ import me.nikialeksey.weeklyrates.rates.RatesModule;
         NetworkModule.class,
         PropertiesModule.class,
         RatesApiModule.class,
-        LocaleModule.class,
-        RatesModule.class
+        LocaleModule.class
 })
 public interface ApplicationComponent {
 
     void inject(MainActivity activity);
 
     void inject(RatesFragment fragment);
+
+    void inject(RatesHolder ratesHolder);
 }

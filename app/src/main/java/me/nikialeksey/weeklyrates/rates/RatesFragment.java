@@ -20,18 +20,19 @@ import me.nikialeksey.weeklyrates.R;
 import me.nikialeksey.weeklyrates.WeeklyRatesApp;
 import me.nikialeksey.weeklyrates.api.entities.Rates;
 import me.nikialeksey.weeklyrates.api.rest.RatesApi;
+import me.nikialeksey.weeklyrates.rates.impl.RatesAdapterImpl;
 
 public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implements RatesView, SwipeRefreshLayout.OnRefreshListener {
 
     @Inject
     RatesApi ratesApi;
-    @Inject
-    RatesAdapter ratesAdapter;
 
     @BindView(R.id.rates)
     RecyclerView ratesView;
     @BindView(R.id.ratesRefresh)
     SwipeRefreshLayout ratesRefreshLayout;
+
+    private RatesAdapter ratesAdapter;
 
     @Nullable
     @Override
@@ -45,6 +46,7 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
+        ratesAdapter = new RatesAdapterImpl();
         ratesView.setLayoutManager(new LinearLayoutManager(getContext()));
         ratesView.setHasFixedSize(true);
         ratesView.setAdapter((RecyclerView.Adapter) ratesAdapter);
