@@ -25,6 +25,8 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
 
     @Inject
     RatesApi ratesApi;
+    @Inject
+    RatesAdapter ratesAdapter;
 
     @BindView(R.id.rates)
     RecyclerView ratesView;
@@ -39,11 +41,13 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
 
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         WeeklyRatesApp.getApplicationComponent().inject(this);
+        super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
         ratesView.setLayoutManager(new LinearLayoutManager(getContext()));
+        ratesView.setHasFixedSize(true);
+        ratesView.setAdapter((RecyclerView.Adapter) ratesAdapter);
 
         ratesRefreshLayout.setOnRefreshListener(this);
     }
@@ -56,7 +60,7 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
 
     @Override
     public void setData(final Rates rates) {
-        ratesView.setAdapter(new RatesAdapter(rates.getRates()));
+        ratesAdapter.changeRates(rates.getRates());
         ratesRefreshLayout.setRefreshing(false);
     }
 
