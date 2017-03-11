@@ -9,9 +9,11 @@ import me.nikialeksey.weeklyrates.locale.impl.NumericRepresenterImpl;
 
 @Module
 public class LocaleModule {
+
     @Provides
     @Singleton
     NumericRepresenter provideNumericRepresenter() {
         return new NumericRepresenterImpl();
     }
+
 }

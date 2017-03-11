@@ -7,6 +7,7 @@ import me.nikialeksey.weeklyrates.rates.impl.RatesAdapterImpl;
 
 @Module
 public class RatesModule {
+
     @Provides
     RatesAdapter provideRatesAdapter(final NumericRepresenter numericRepresenter) {
         return new RatesAdapterImpl(numericRepresenter);
