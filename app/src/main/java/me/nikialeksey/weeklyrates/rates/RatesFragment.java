@@ -12,13 +12,15 @@ import android.view.ViewGroup;
 
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.nikialeksey.weeklyrates.R;
 import me.nikialeksey.weeklyrates.WeeklyRatesApp;
-import me.nikialeksey.weeklyrates.api.entities.Rates;
+import me.nikialeksey.weeklyrates.api.entities.Rate;
 import me.nikialeksey.weeklyrates.api.rest.RatesApi;
 import me.nikialeksey.weeklyrates.rates.impl.RatesAdapterImpl;
 
@@ -61,8 +63,8 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
     }
 
     @Override
-    public void setData(final Rates rates) {
-        ratesAdapter.changeRates(rates.getRates());
+    public void setData(final List<Rate> rates) {
+        ratesAdapter.changeRates(rates);
         ratesRefreshLayout.setRefreshing(false);
     }
 

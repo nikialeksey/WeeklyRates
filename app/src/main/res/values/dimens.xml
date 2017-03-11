@@ -5,5 +5,5 @@
 
     <dimen name="spacingVertical">4dp</dimen>
 
-    <dimen name="smallTextSize">10sp</dimen>
+    <dimen name="captionTextSize">12sp</dimen>
 </resources>

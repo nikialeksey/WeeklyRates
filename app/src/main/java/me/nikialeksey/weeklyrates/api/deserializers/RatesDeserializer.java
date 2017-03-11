@@ -5,21 +5,30 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import io.realm.RealmList;
 import me.nikialeksey.weeklyrates.api.entities.Rate;
-import me.nikialeksey.weeklyrates.api.entities.Rates;
 
-public class RatesDeserializer extends JsonDeserializer<Rates> {
+public class RatesDeserializer extends JsonDeserializer<List<Rate>> {
+
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 
     @Override
-    public Rates deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public List<Rate> deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final JsonNode node = p.getCodec().readTree(p);
 
-        final RealmList<Rate> rateList = new RealmList<>();
+        final String dateText = node.get("date").asText();
+        final LocalDate date = dateTimeFormatter.parseLocalDate(dateText);
+
+        final RealmList<Rate> rates = new RealmList<>();
 
         final Iterator<Map.Entry<String, JsonNode>> rateNodes = node.get("rates").fields();
         while (rateNodes.hasNext()) {
@@ -30,15 +39,11 @@ public class RatesDeserializer extends JsonDeserializer<Rates> {
             final Rate rate = new Rate();
             rate.setCurrency(currency);
             rate.setValue(value);
+            rate.setDate(date.toDate());
+            rate.setId(dateText + currency);
 
-            rateList.add(rate);
+            rates.add(rate);
         }
-
-        final String date = node.get("date").asText();
-
-        final Rates rates = new Rates();
-        rates.setRates(rateList);
-        rates.setDate(date);
 
         return rates;
     }
