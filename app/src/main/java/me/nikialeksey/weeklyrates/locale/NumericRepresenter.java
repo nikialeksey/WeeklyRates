@@ -4,4 +4,6 @@ public interface NumericRepresenter {
     String represent(final Number number);
 
     String represent(final String number);
+
+    String representWithTwoDecimalPlaces(final String number);
 }

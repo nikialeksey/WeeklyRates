@@ -55,7 +55,7 @@ public class RatesHolder extends RecyclerView.ViewHolder {
 
             if (j >= 0) {
                 final Rate dailyRate = weeklyRates.get(j);
-                dailyRateValue.setText(numericRepresenter.represent(dailyRate.getValue()));
+                dailyRateValue.setText(numericRepresenter.representWithTwoDecimalPlaces(dailyRate.getValue()));
             } else {
                 dailyRateValue.setText(null);
             }
