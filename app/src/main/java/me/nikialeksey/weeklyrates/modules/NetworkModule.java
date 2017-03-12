@@ -16,8 +16,6 @@ import javax.net.ssl.X509TrustManager;
 
 import dagger.Module;
 import dagger.Provides;
-import me.nikialeksey.weeklyrates.WeeklyRatesApp;
-import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -25,12 +23,6 @@ import rx.schedulers.Schedulers;
 
 @Module
 public class NetworkModule {
-
-    @Provides
-    @Singleton
-    Cache provideOkHttpCache(final WeeklyRatesApp application, @Named("cacheSize") final int cacheSize) {
-        return new Cache(application.getCacheDir(), cacheSize);
-    }
 
     @Provides
     @Singleton
@@ -65,9 +57,8 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    OkHttpClient provideOkHttpClient(final Cache cache, final SSLSocketFactory sslSocketFactory, final X509TrustManager trustManager) {
+    OkHttpClient provideOkHttpClient(final SSLSocketFactory sslSocketFactory, final X509TrustManager trustManager) {
         return new OkHttpClient.Builder()
-                .cache(cache)
                 .sslSocketFactory(sslSocketFactory, trustManager)
                 .build();
     }

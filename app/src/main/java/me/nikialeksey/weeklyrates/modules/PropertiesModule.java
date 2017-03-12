@@ -16,12 +16,6 @@ public class PropertiesModule {
     }
 
     @Provides
-    @Named("cacheSize")
-    int provideCacheSize() {
-        return 10 * 1024 * 1024; // 10 MiB
-    }
-
-    @Provides
     @Named("daysCountForLoadingRates")
     int provideDaysCountForLoadingRates() {
         return BuildConfig.DAYS_COUNT_FOR_LOADING_RATES;

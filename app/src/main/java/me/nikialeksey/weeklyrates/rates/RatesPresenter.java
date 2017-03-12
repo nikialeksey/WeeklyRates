@@ -17,6 +17,7 @@ import me.nikialeksey.weeklyrates.rates.api.rest.RatesApi;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 
 class RatesPresenter extends MvpBasePresenter<RatesView> {
 
@@ -66,6 +67,19 @@ class RatesPresenter extends MvpBasePresenter<RatesView> {
         }
 
         Observable.merge(rateRequests)
+                .toList()
+                .map(new Func1<List<List<Rate>>, List<Rate>>() {
+                    @Override
+                    public List<Rate> call(final List<List<Rate>> ratesLists) {
+                        final List<Rate> allRates = new ArrayList<>();
+                        for (final List<Rate> rates : ratesLists) {
+                            for (final Rate rate : rates) {
+                                allRates.add(rate);
+                            }
+                        }
+                        return allRates;
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<Rate>>() {
                     @Override

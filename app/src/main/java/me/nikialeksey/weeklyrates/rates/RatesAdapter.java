@@ -8,4 +8,6 @@ import me.nikialeksey.weeklyrates.rates.api.entities.Rate;
 
 public interface RatesAdapter {
     void changeRates(List<Rate> rates, final Multimap<String, Rate> weeklyRates);
+
+    boolean isEmpty();
 }

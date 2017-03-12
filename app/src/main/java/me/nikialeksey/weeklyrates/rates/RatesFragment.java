@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.common.collect.Multimap;
@@ -30,7 +31,8 @@ import me.nikialeksey.weeklyrates.rates.api.entities.Rate;
 import me.nikialeksey.weeklyrates.rates.api.rest.RatesApi;
 import me.nikialeksey.weeklyrates.rates.impl.RatesAdapterImpl;
 
-public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implements RatesView, SwipeRefreshLayout.OnRefreshListener {
+public class RatesFragment extends MvpFragment<RatesView, RatesPresenter>
+        implements RatesView, SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     @Inject
     RatesApi ratesApi;
@@ -46,6 +48,8 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
     View messageContainer;
     @BindView(R.id.message)
     TextView message;
+    @BindView(R.id.action)
+    Button action;
     @BindView(R.id.rates)
     RecyclerView ratesView;
     @BindView(R.id.ratesRefresh)
@@ -96,13 +100,13 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
 
     @Override
     public void showErrorLoadingMessage() {
-        showMessage(R.string.errorLoading);
+        ratesRefreshLayout.setRefreshing(false);
+        showMessage(R.string.errorLoading, R.string.reloadAction);
     }
 
     @Override
     public void showLoading() {
         showRatesView();
-
         ratesRefreshLayout.setRefreshing(true);
     }
 
@@ -131,9 +135,23 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
         messageContainer.setVisibility(View.GONE);
     }
 
-    private void showMessage(final int errorLoading) {
-        showMessageContainer();
+    private void showMessage(final int messageId, final int actionId) {
+        if (ratesAdapter.isEmpty()) {
+            showMessageContainer();
+            message.setText(messageId);
+            action.setText(actionId);
+            action.setOnClickListener(this);
+        } else {
+            snackbar = Snackbar.make(ratesView, messageId, Snackbar.LENGTH_INDEFINITE);
+            snackbar.setText(messageId);
+            snackbar.setAction(actionId, this);
+            snackbar.show();
+        }
+    }
 
-        message.setText(errorLoading);
+    @Override
+    public void onClick(final View v) {
+        showLoading();
+        getPresenter().load(true);
     }
 }
