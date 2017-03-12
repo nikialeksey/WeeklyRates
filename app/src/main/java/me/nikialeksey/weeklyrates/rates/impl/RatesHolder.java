@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +26,9 @@ import me.nikialeksey.weeklyrates.locale.NumericRepresenter;
 
 public class RatesHolder extends RecyclerView.ViewHolder {
 
+    private final List<TextView> weeklyRateValues;
     @Inject
     NumericRepresenter numericRepresenter;
-
     @BindView(R.id.currentValue)
     TextView currentValue;
     @BindView(R.id.currencyCode)
@@ -39,29 +40,60 @@ public class RatesHolder extends RecyclerView.ViewHolder {
         super(view);
         WeeklyRatesApp.getApplicationComponent().inject(this);
         ButterKnife.bind(this, view);
-        initWeeklyRates(weeklyRates);
+        weeklyRateValues = initWeeklyRates(weeklyRates);
     }
 
-    private void initWeeklyRates(final ConstraintLayout weeklyRates) {
+    void bind(final Rate rate, final List<Rate> weeklyRates) {
+        final String representedValue = numericRepresenter.represent(rate.getValue());
+        final String representCurrency = rate.getCurrency();
+
+        currentValue.setText(representedValue);
+        currencyCode.setText(representCurrency);
+
+        for (int i = weeklyRateValues.size() - 1, j = weeklyRates.size() - 1; i >= 0; i--, j--) {
+            final TextView dailyRateValue = weeklyRateValues.get(i);
+
+            if (j >= 0) {
+                final Rate dailyRate = weeklyRates.get(j);
+                dailyRateValue.setText(numericRepresenter.represent(dailyRate.getValue()));
+            } else {
+                dailyRateValue.setText(null);
+            }
+        }
+
+    }
+
+    @NonNull
+    private List<TextView> initWeeklyRates(final ConstraintLayout weeklyRates) {
         final LayoutInflater inflater = LayoutInflater.from(weeklyRates.getContext());
 
+        DateTime currentDay = new DateTime()
+                .minusDays(DateTimeConstants.DAYS_PER_WEEK)
+                .plusDays(1);
+
+        final List<TextView> weeklyRateValues = new ArrayList<>();
         final List<View> dailyRates = new ArrayList<>();
-        DateTime currentDay = new DateTime().minusDays(6);
-        for (int i = 0; i < 7; i++) {
-            final View dailyRate = createDailyRate(inflater, weeklyRates, currentDay.dayOfWeek());
-            dailyRates.add(dailyRate);
-            weeklyRates.addView(dailyRate, new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        for (int i = 0; i < DateTimeConstants.DAYS_PER_WEEK; i++) {
+            final View daily = createDailyRate(inflater, weeklyRates, currentDay.dayOfWeek());
+            dailyRates.add(daily);
+            weeklyRates.addView(daily, new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            final TextView value = ButterKnife.findById(daily, R.id.value);
+            weeklyRateValues.add(value);
+
             currentDay = currentDay.plusDays(1);
         }
 
         final ConstraintSet constraintSet = createConstraintSetForHorizontalChain(weeklyRates, dailyRates);
         constraintSet.applyTo(weeklyRates);
+
+        return weeklyRateValues;
     }
 
     @NonNull
     private ConstraintSet createConstraintSetForHorizontalChain(final ConstraintLayout weeklyRates, final List<View> dailyRates) {
         final int[] chainIds = new int[dailyRates.size()];
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < DateTimeConstants.DAYS_PER_WEEK; i++) {
             chainIds[i] = dailyRates.get(i).getId();
         }
 
@@ -79,19 +111,10 @@ public class RatesHolder extends RecyclerView.ViewHolder {
         daily.setId(View.generateViewId());
 
         final TextView day = ButterKnife.findById(daily, R.id.day);
-        final TextView value = ButterKnife.findById(daily, R.id.value);
 
         day.setText(dayOfWeek.getAsShortText());
-        value.setText("523.23");
 
         return daily;
     }
 
-    void bind(final Rate rate) {
-        final String representedValue = numericRepresenter.represent(rate.getValue());
-        final String representCurrency = rate.getCurrency();
-
-        currentValue.setText(representedValue);
-        currencyCode.setText(representCurrency);
-    }
 }
