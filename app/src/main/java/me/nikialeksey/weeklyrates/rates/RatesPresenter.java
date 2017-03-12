@@ -34,10 +34,14 @@ class RatesPresenter extends MvpBasePresenter<RatesView> {
     }
 
     void load(final boolean pullToRefresh) {
-        if (pullToRefresh) {
-            loadRemote();
-        } else {
-            loadLocal();
+        if (isViewAttached()) {
+            getView().showLoading();
+
+            if (pullToRefresh) {
+                loadRemote();
+            } else {
+                loadLocal();
+            }
         }
     }
 
@@ -47,7 +51,6 @@ class RatesPresenter extends MvpBasePresenter<RatesView> {
             final Multimap<String, Rate> weeklyRates = getWeeklyRates(actualRates);
 
             if (actualRates.isEmpty()) {
-                getView().showLoading();
                 loadRemote();
             } else {
                 getView().setData(actualRates, weeklyRates);

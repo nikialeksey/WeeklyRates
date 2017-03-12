@@ -23,15 +23,6 @@ public class RatesModelImpl implements RatesModel {
     }
 
     @Override
-    public Rate findNearestLessDateWithCurrency(final Date date, final String currencyCode) {
-        return realm.where(Rate.class)
-                .equalTo("currency", currencyCode)
-                .lessThanOrEqualTo("date", date)
-                .findAllSorted("date", Sort.DESCENDING)
-                .first();
-    }
-
-    @Override
     public void save(final List<Rate> rates) {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
