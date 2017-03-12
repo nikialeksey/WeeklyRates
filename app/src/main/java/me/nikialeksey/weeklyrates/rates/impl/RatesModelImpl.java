@@ -1,5 +1,9 @@
 package me.nikialeksey.weeklyrates.rates.impl;
 
+import com.google.common.collect.Lists;
+
+import org.joda.time.DateTimeConstants;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +51,11 @@ public class RatesModelImpl implements RatesModel {
 
     @Override
     public List<Rate> weeklyRatesByRate(final Rate rate) {
-        return Collections.emptyList();
+        final List<Rate> weeklyRates = realm.where(Rate.class)
+                .equalTo("currency", rate.getCurrency())
+                .findAllSorted("date", Sort.DESCENDING);
+
+        return Lists.reverse(weeklyRates.subList(0, Math.min(weeklyRates.size(), DateTimeConstants.DAYS_PER_WEEK)));
     }
 
 }

@@ -57,6 +57,7 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
         ButterKnife.bind(this, view);
 
         realm = Realm.getDefaultInstance();
+        // TODO нужно вынести в отдельное поведение и сделать обновление рилма в базовом классе, например
         ratesModel.updateRealmInstance(realm);
 
         ratesAdapter = new RatesAdapterImpl();
