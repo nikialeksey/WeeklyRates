@@ -5,6 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +18,16 @@ import me.nikialeksey.weeklyrates.rates.RatesAdapter;
 public class RatesAdapterImpl extends RecyclerView.Adapter<RatesHolder> implements RatesAdapter {
 
     private final List<Rate> rates = new ArrayList<>();
+    private final Multimap<String, Rate> weeklyRates = ArrayListMultimap.create();
 
     @Override
-    public void changeRates(final List<Rate> rates) {
+    public void changeRates(final List<Rate> rates, final Multimap<String, Rate> weeklyRates) {
         this.rates.clear();
         this.rates.addAll(rates);
+
+        this.weeklyRates.clear();
+        this.weeklyRates.putAll(weeklyRates);
+
         notifyDataSetChanged();
     }
 

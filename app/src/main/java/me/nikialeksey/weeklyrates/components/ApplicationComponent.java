@@ -9,6 +9,7 @@ import me.nikialeksey.weeklyrates.modules.LocaleModule;
 import me.nikialeksey.weeklyrates.modules.NetworkModule;
 import me.nikialeksey.weeklyrates.modules.PropertiesModule;
 import me.nikialeksey.weeklyrates.rates.RatesFragment;
+import me.nikialeksey.weeklyrates.rates.RatesModule;
 import me.nikialeksey.weeklyrates.rates.impl.RatesHolder;
 
 @Singleton
@@ -17,7 +18,8 @@ import me.nikialeksey.weeklyrates.rates.impl.RatesHolder;
         NetworkModule.class,
         PropertiesModule.class,
         RatesApiModule.class,
-        LocaleModule.class
+        LocaleModule.class,
+        RatesModule.class
 })
 public interface ApplicationComponent {
 

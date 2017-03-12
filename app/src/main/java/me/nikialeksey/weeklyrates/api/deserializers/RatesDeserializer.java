@@ -6,8 +6,6 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -19,14 +17,18 @@ import me.nikialeksey.weeklyrates.api.entities.Rate;
 
 public class RatesDeserializer extends JsonDeserializer<List<Rate>> {
 
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+    private final RateDateFormatter rateDateFormatter;
+
+    public RatesDeserializer(final RateDateFormatter rateDateFormatter) {
+        this.rateDateFormatter = rateDateFormatter;
+    }
 
     @Override
     public List<Rate> deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final JsonNode node = p.getCodec().readTree(p);
 
         final String dateText = node.get("date").asText();
-        final LocalDate date = dateTimeFormatter.parseLocalDate(dateText);
+        final LocalDate date = rateDateFormatter.parseLocalDate(dateText);
 
         final RealmList<Rate> rates = new RealmList<>();
 
