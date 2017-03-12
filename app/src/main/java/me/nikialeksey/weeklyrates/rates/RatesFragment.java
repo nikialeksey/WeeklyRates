@@ -16,6 +16,7 @@ import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +36,9 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
     RatesModel ratesModel;
     @Inject
     RateDateFormatter rateDateFormatter;
+    @Inject
+    @Named("daysCountForLoadingRates")
+    int daysCountForLoadingRates;
 
     @BindView(R.id.rates)
     RecyclerView ratesView;
@@ -72,7 +76,7 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
     @NonNull
     @Override
     public RatesPresenter createPresenter() {
-        return new RatesPresenter(ratesApi, rateDateFormatter, ratesModel);
+        return new RatesPresenter(ratesApi, rateDateFormatter, ratesModel, daysCountForLoadingRates);
     }
 
     @Override

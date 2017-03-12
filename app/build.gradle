@@ -13,6 +13,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField "String", "BASE_URL", "\"https://api.fixer.io\""
+        buildConfigField "int", "DAYS_COUNT_FOR_LOADING_RATES", "30"
     }
     buildTypes {
         release {
