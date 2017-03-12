@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Weekly Rates</string>
+
+    <string name="errorLoading">Ooops! Loading error… Try to refresh later</string>
 </resources>

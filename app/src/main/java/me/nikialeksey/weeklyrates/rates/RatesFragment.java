@@ -3,12 +3,14 @@ package me.nikialeksey.weeklyrates.rates;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.common.collect.Multimap;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
@@ -40,6 +42,10 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
     @Named("daysCountForLoadingRates")
     int daysCountForLoadingRates;
 
+    @BindView(R.id.messageContainer)
+    View messageContainer;
+    @BindView(R.id.message)
+    TextView message;
     @BindView(R.id.rates)
     RecyclerView ratesView;
     @BindView(R.id.ratesRefresh)
@@ -47,6 +53,7 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
 
     private Realm realm;
     private RatesAdapter ratesAdapter;
+    private Snackbar snackbar;
 
     @Nullable
     @Override
@@ -63,6 +70,8 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
         realm = Realm.getDefaultInstance();
         // TODO нужно вынести в отдельное поведение и сделать обновление рилма в базовом классе, например
         ratesModel.updateRealmInstance(realm);
+
+        snackbar = Snackbar.make(ratesView, "", Snackbar.LENGTH_INDEFINITE);
 
         ratesAdapter = new RatesAdapterImpl();
         ratesView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -86,6 +95,18 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
     }
 
     @Override
+    public void showErrorLoadingMessage() {
+        showMessage(R.string.errorLoading);
+    }
+
+    @Override
+    public void showLoading() {
+        showRatesView();
+
+        ratesRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
     public void onRefresh() {
         getPresenter().load(true);
     }
@@ -94,5 +115,25 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implem
     public void onDestroyView() {
         super.onDestroyView();
         realm.close();
+    }
+
+    private void showMessageContainer() {
+        snackbar.dismiss();
+
+        ratesRefreshLayout.setVisibility(View.GONE);
+        messageContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void showRatesView() {
+        snackbar.dismiss();
+
+        ratesRefreshLayout.setVisibility(View.VISIBLE);
+        messageContainer.setVisibility(View.GONE);
+    }
+
+    private void showMessage(final int errorLoading) {
+        showMessageContainer();
+
+        message.setText(errorLoading);
     }
 }

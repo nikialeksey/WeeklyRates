@@ -11,4 +11,7 @@ interface RatesView extends MvpView {
 
     void setData(List<Rate> rates, Multimap<String, Rate> weeklyRates);
 
+    void showErrorLoadingMessage();
+
+    void showLoading();
 }

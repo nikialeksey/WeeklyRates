@@ -11,12 +11,12 @@ import org.joda.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import me.nikialeksey.weeklyrates.rates.api.deserializers.RateDateFormatter;
 import me.nikialeksey.weeklyrates.rates.api.entities.Rate;
 import me.nikialeksey.weeklyrates.rates.api.rest.RatesApi;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 class RatesPresenter extends MvpBasePresenter<RatesView> {
 
@@ -45,14 +45,19 @@ class RatesPresenter extends MvpBasePresenter<RatesView> {
             final List<Rate> actualRates = ratesModel.actualRates();
             final Multimap<String, Rate> weeklyRates = getWeeklyRates(actualRates);
 
-            getView().setData(actualRates, weeklyRates);
+            if (actualRates.isEmpty()) {
+                getView().showLoading();
+                loadRemote();
+            } else {
+                getView().setData(actualRates, weeklyRates);
+            }
         }
     }
 
     private void loadRemote() {
         LocalDate currentDay = new LocalDate().minusDays(daysCountForLoadingRates).plusDays(1);
 
-        final List<Single<List<Rate>>> rateRequests = new ArrayList<>();
+        final List<Observable<List<Rate>>> rateRequests = new ArrayList<>();
         for (int i = 0; i < daysCountForLoadingRates; i++) {
             final String currentDayText = rateDateFormatter.formatLocalDate(currentDay);
             rateRequests.add(api.rates(currentDayText));
@@ -60,20 +65,23 @@ class RatesPresenter extends MvpBasePresenter<RatesView> {
             currentDay = currentDay.plusDays(1);
         }
 
-        Single.merge(rateRequests)
+        Observable.merge(rateRequests)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Rate>>() {
+                .subscribe(new Action1<List<Rate>>() {
                     @Override
-                    public void accept(final List<Rate> rates) {
+                    public void call(final List<Rate> rates) {
                         if (isViewAttached()) {
                             ratesModel.save(rates);
 
                             loadLocal();
                         }
                     }
-                }, new Consumer<Throwable>() {
+                }, new Action1<Throwable>() {
                     @Override
-                    public void accept(final Throwable throwable) {
+                    public void call(final Throwable throwable) {
+                        if (isViewAttached()) {
+                            getView().showErrorLoadingMessage();
+                        }
                     }
                 });
     }
