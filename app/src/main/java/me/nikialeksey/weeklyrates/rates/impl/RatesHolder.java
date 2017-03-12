@@ -21,8 +21,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.nikialeksey.weeklyrates.R;
 import me.nikialeksey.weeklyrates.WeeklyRatesApp;
-import me.nikialeksey.weeklyrates.api.entities.Rate;
 import me.nikialeksey.weeklyrates.locale.NumericRepresenter;
+import me.nikialeksey.weeklyrates.rates.api.entities.Rate;
 
 public class RatesHolder extends RecyclerView.ViewHolder {
 

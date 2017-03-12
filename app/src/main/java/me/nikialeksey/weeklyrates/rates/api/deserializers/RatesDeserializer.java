@@ -1,4 +1,4 @@
-package me.nikialeksey.weeklyrates.api.deserializers;
+package me.nikialeksey.weeklyrates.rates.api.deserializers;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.realm.RealmList;
-import me.nikialeksey.weeklyrates.api.entities.Rate;
+import me.nikialeksey.weeklyrates.rates.api.entities.Rate;
 
 public class RatesDeserializer extends JsonDeserializer<List<Rate>> {
 

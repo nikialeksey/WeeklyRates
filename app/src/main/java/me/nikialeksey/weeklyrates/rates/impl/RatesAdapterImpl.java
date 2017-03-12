@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.nikialeksey.weeklyrates.R;
-import me.nikialeksey.weeklyrates.api.entities.Rate;
 import me.nikialeksey.weeklyrates.rates.RatesAdapter;
+import me.nikialeksey.weeklyrates.rates.api.entities.Rate;
 
 public class RatesAdapterImpl extends RecyclerView.Adapter<RatesHolder> implements RatesAdapter {
 

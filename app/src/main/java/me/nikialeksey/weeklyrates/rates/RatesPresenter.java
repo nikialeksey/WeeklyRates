@@ -10,9 +10,9 @@ import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import me.nikialeksey.weeklyrates.api.deserializers.RateDateFormatter;
-import me.nikialeksey.weeklyrates.api.entities.Rate;
-import me.nikialeksey.weeklyrates.api.rest.RatesApi;
+import me.nikialeksey.weeklyrates.rates.api.deserializers.RateDateFormatter;
+import me.nikialeksey.weeklyrates.rates.api.entities.Rate;
+import me.nikialeksey.weeklyrates.rates.api.rest.RatesApi;
 
 class RatesPresenter extends MvpBasePresenter<RatesView> {
 

@@ -1,4 +1,4 @@
-package me.nikialeksey.weeklyrates.api.entities;
+package me.nikialeksey.weeklyrates.rates.api.entities;
 
 import java.util.Date;
 

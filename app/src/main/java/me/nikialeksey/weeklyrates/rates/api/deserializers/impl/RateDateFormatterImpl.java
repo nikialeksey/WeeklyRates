@@ -1,10 +1,10 @@
-package me.nikialeksey.weeklyrates.api.deserializers.impl;
+package me.nikialeksey.weeklyrates.rates.api.deserializers.impl;
 
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import me.nikialeksey.weeklyrates.api.deserializers.RateDateFormatter;
+import me.nikialeksey.weeklyrates.rates.api.deserializers.RateDateFormatter;
 
 public class RateDateFormatterImpl implements RateDateFormatter {
 

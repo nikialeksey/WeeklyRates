@@ -22,9 +22,9 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 import me.nikialeksey.weeklyrates.R;
 import me.nikialeksey.weeklyrates.WeeklyRatesApp;
-import me.nikialeksey.weeklyrates.api.deserializers.RateDateFormatter;
-import me.nikialeksey.weeklyrates.api.entities.Rate;
-import me.nikialeksey.weeklyrates.api.rest.RatesApi;
+import me.nikialeksey.weeklyrates.rates.api.deserializers.RateDateFormatter;
+import me.nikialeksey.weeklyrates.rates.api.entities.Rate;
+import me.nikialeksey.weeklyrates.rates.api.rest.RatesApi;
 import me.nikialeksey.weeklyrates.rates.impl.RatesAdapterImpl;
 
 public class RatesFragment extends MvpFragment<RatesView, RatesPresenter> implements RatesView, SwipeRefreshLayout.OnRefreshListener {

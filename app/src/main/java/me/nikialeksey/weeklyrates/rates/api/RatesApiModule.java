@@ -1,4 +1,4 @@
-package me.nikialeksey.weeklyrates.api;
+package me.nikialeksey.weeklyrates.rates.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -10,11 +10,11 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import me.nikialeksey.weeklyrates.api.deserializers.RateDateFormatter;
-import me.nikialeksey.weeklyrates.api.deserializers.RatesDeserializer;
-import me.nikialeksey.weeklyrates.api.deserializers.impl.RateDateFormatterImpl;
-import me.nikialeksey.weeklyrates.api.entities.Rate;
-import me.nikialeksey.weeklyrates.api.rest.RatesApi;
+import me.nikialeksey.weeklyrates.rates.api.deserializers.RateDateFormatter;
+import me.nikialeksey.weeklyrates.rates.api.deserializers.RatesDeserializer;
+import me.nikialeksey.weeklyrates.rates.api.deserializers.impl.RateDateFormatterImpl;
+import me.nikialeksey.weeklyrates.rates.api.entities.Rate;
+import me.nikialeksey.weeklyrates.rates.api.rest.RatesApi;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 

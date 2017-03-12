@@ -1,4 +1,4 @@
-package me.nikialeksey.weeklyrates.api.deserializers;
+package me.nikialeksey.weeklyrates.rates.api.deserializers;
 
 import org.joda.time.LocalDate;
 

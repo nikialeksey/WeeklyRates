@@ -10,8 +10,8 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.Sort;
-import me.nikialeksey.weeklyrates.api.entities.Rate;
 import me.nikialeksey.weeklyrates.rates.RatesModel;
+import me.nikialeksey.weeklyrates.rates.api.entities.Rate;
 
 public class RatesModelImpl implements RatesModel {
 

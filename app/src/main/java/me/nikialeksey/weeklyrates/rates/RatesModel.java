@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
-import me.nikialeksey.weeklyrates.api.entities.Rate;
+import me.nikialeksey.weeklyrates.rates.api.entities.Rate;
 
 public interface RatesModel {
 
