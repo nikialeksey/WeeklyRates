@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 
 import com.google.common.collect.Multimap;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
+
+import org.joda.time.LocalDate;
 
 import java.util.List;
 
@@ -96,6 +99,9 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter>
     public void setData(final List<Rate> rates, final Multimap<String, Rate> weeklyRates) {
         ratesAdapter.changeRates(rates, weeklyRates);
         ratesRefreshLayout.setRefreshing(false);
+
+        final String date = rateDateFormatter.formatLocalDate(new LocalDate(rates.get(0).getDate()));
+        showMessage(R.string.syncingAtDate, date);
     }
 
     @Override
@@ -143,10 +149,15 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter>
             action.setOnClickListener(this);
         } else {
             snackbar = Snackbar.make(ratesView, messageId, Snackbar.LENGTH_INDEFINITE);
-            snackbar.setText(messageId);
             snackbar.setAction(actionId, this);
             snackbar.show();
         }
+    }
+
+    private void showMessage(final int messageId, final Object ...args) {
+        final String message = getContext().getString(messageId, args);
+        snackbar = Snackbar.make(ratesView, message, Snackbar.LENGTH_INDEFINITE);
+        snackbar.show();
     }
 
     @Override
