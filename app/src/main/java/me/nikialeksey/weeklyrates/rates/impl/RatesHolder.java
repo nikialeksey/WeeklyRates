@@ -59,7 +59,7 @@ public class RatesHolder extends RecyclerView.ViewHolder {
         for (int i = weeklyRateValues.size() - 1, j = weeklyRates.size() - 1; i >= 0; i--) {
             final TextView dailyRateValue = weeklyRateValues.get(i);
 
-            dailyRateValue.setText(null);
+            dailyRateValue.setText("-");
             if (j >= 0) {
                 final Rate dailyRate = weeklyRates.get(j);
                 if (dailyRate.getDate().equals(currentDay.toDate())) {
