@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,7 +27,6 @@ import me.nikialeksey.weeklyrates.rates.api.entities.Rate;
 
 public class RatesHolder extends RecyclerView.ViewHolder {
 
-    private final List<TextView> weeklyRateValues;
     @Inject
     NumericRepresenter numericRepresenter;
     @BindView(R.id.currentValue)
@@ -36,11 +36,14 @@ public class RatesHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.weeklyRates)
     ConstraintLayout weeklyRates;
 
+    private final List<TextView> weeklyRateValues = new ArrayList<>();
+    private final List<TextView> dayOfWeekNames = new ArrayList<>();
+
     RatesHolder(final View view) {
         super(view);
         WeeklyRatesApp.getApplicationComponent().inject(this);
         ButterKnife.bind(this, view);
-        weeklyRateValues = initWeeklyRates(weeklyRates);
+        initWeeklyRates(weeklyRates);
     }
 
     void bind(final Rate rate, final List<Rate> weeklyRates) {
@@ -50,44 +53,47 @@ public class RatesHolder extends RecyclerView.ViewHolder {
         currentValue.setText(representedValue);
         currencyCode.setText(representCurrency);
 
-        for (int i = weeklyRateValues.size() - 1, j = weeklyRates.size() - 1; i >= 0; i--, j--) {
+        fillDayOfWeekNames(rate.getDate());
+
+        DateTime currentDay = new DateTime(rate.getDate());
+        for (int i = weeklyRateValues.size() - 1, j = weeklyRates.size() - 1; i >= 0; i--) {
             final TextView dailyRateValue = weeklyRateValues.get(i);
 
+            dailyRateValue.setText(null);
             if (j >= 0) {
                 final Rate dailyRate = weeklyRates.get(j);
-                dailyRateValue.setText(numericRepresenter.representWithTwoDecimalPlaces(dailyRate.getValue()));
-            } else {
-                dailyRateValue.setText(null);
+                if (dailyRate.getDate().equals(currentDay.toDate())) {
+                    dailyRateValue.setText(numericRepresenter.representWithTwoDecimalPlaces(dailyRate.getValue()));
+                    j--;
+                }
             }
+            currentDay = currentDay.minusDays(1);
         }
 
     }
 
-    @NonNull
-    private List<TextView> initWeeklyRates(final ConstraintLayout weeklyRates) {
-        final LayoutInflater inflater = LayoutInflater.from(weeklyRates.getContext());
-
-        DateTime currentDay = new DateTime()
-                .minusDays(DateTimeConstants.DAYS_PER_WEEK)
-                .plusDays(1);
-
-        final List<TextView> weeklyRateValues = new ArrayList<>();
-        final List<View> dailyRates = new ArrayList<>();
-        for (int i = 0; i < DateTimeConstants.DAYS_PER_WEEK; i++) {
-            final View daily = createDailyRate(inflater, weeklyRates, currentDay.dayOfWeek());
-            dailyRates.add(daily);
-            weeklyRates.addView(daily, new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-            final TextView value = ButterKnife.findById(daily, R.id.value);
-            weeklyRateValues.add(value);
+    private void fillDayOfWeekNames(Date lastWeekDay) {
+        DateTime currentDay = new DateTime(lastWeekDay).minusDays(DateTimeConstants.DAYS_PER_WEEK).plusDays(1);
+        for (int i = 0; i < dayOfWeekNames.size(); i++) {
+            TextView dayOfWeekName = dayOfWeekNames.get(i);
+            dayOfWeekName.setText(currentDay.dayOfWeek().getAsShortText());
 
             currentDay = currentDay.plusDays(1);
+        }
+    }
+
+    private void initWeeklyRates(final ConstraintLayout weeklyRates) {
+        final LayoutInflater inflater = LayoutInflater.from(weeklyRates.getContext());
+
+        final List<View> dailyRates = new ArrayList<>();
+        for (int i = 0; i < DateTimeConstants.DAYS_PER_WEEK; i++) {
+            final View daily = createDailyRate(inflater, weeklyRates);
+            dailyRates.add(daily);
+            weeklyRates.addView(daily, new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
         final ConstraintSet constraintSet = createConstraintSetForHorizontalChain(weeklyRates, dailyRates);
         constraintSet.applyTo(weeklyRates);
-
-        return weeklyRateValues;
     }
 
     @NonNull
@@ -106,13 +112,14 @@ public class RatesHolder extends RecyclerView.ViewHolder {
     }
 
     @NonNull
-    private View createDailyRate(final LayoutInflater inflater, final ConstraintLayout weeklyRates, final DateTime.Property dayOfWeek) {
+    private View createDailyRate(final LayoutInflater inflater, final ConstraintLayout weeklyRates) {
         final View daily = inflater.inflate(R.layout.daily_rate_view, weeklyRates, false);
         daily.setId(View.generateViewId());
 
         final TextView day = ButterKnife.findById(daily, R.id.day);
-
-        day.setText(dayOfWeek.getAsShortText());
+        final TextView value = ButterKnife.findById(daily, R.id.value);
+        weeklyRateValues.add(value);
+        dayOfWeekNames.add(day);
 
         return daily;
     }
