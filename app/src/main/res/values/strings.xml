@@ -3,5 +3,5 @@
 
     <string name="errorLoading">Ooops! Loading error… Try to reload later</string>
     <string name="reloadAction">Reload</string>
-    <string name="syncingAtDate">Currencies are syncing at %1$s</string>
+    <string name="syncingAtDate">Currencies loaded at %1$s</string>
 </resources>

@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.db.chart.view.LineChartView;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
@@ -35,6 +37,8 @@ public class RatesHolder extends RecyclerView.ViewHolder {
     TextView currencyCode;
     @BindView(R.id.weeklyRates)
     ConstraintLayout weeklyRates;
+    @BindView(R.id.ratesChart)
+    LineChartView ratesChart;
 
     private final List<TextView> weeklyRateValues = new ArrayList<>();
     private final List<TextView> dayOfWeekNames = new ArrayList<>();
@@ -54,7 +58,10 @@ public class RatesHolder extends RecyclerView.ViewHolder {
         currencyCode.setText(representCurrency);
 
         fillDayOfWeekNames(rate.getDate());
+        fillDailyRateValues(rate, weeklyRates);
+    }
 
+    private void fillDailyRateValues(Rate rate, List<Rate> weeklyRates) {
         DateTime currentDay = new DateTime(rate.getDate());
         for (int i = weeklyRateValues.size() - 1, j = weeklyRates.size() - 1; i >= 0; i--) {
             final TextView dailyRateValue = weeklyRateValues.get(i);
@@ -69,7 +76,6 @@ public class RatesHolder extends RecyclerView.ViewHolder {
             }
             currentDay = currentDay.minusDays(1);
         }
-
     }
 
     private void fillDayOfWeekNames(Date lastWeekDay) {

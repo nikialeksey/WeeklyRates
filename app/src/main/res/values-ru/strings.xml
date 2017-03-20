@@ -3,4 +3,5 @@
 
     <string name="errorLoading">Ой! Ошибка загрузки… Перезагрузите позднее</string>
     <string name="reloadAction">Загрузить</string>
+    <string name="syncingAtDate">Валюты загружены %1$s</string>
 </resources>
