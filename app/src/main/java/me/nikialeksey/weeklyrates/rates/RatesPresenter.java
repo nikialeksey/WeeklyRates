@@ -64,7 +64,7 @@ class RatesPresenter extends MvpBasePresenter<RatesView> {
         final List<Observable<List<Rate>>> rateRequests = new ArrayList<>();
         for (int i = 0; i < daysCountForLoadingRates; i++) {
             final String currentDayText = rateDateFormatter.formatLocalDate(currentDay);
-            rateRequests.add(api.rates(currentDayText));
+            rateRequests.add(api.rates(currentDayText, "RUB"));
 
             currentDay = currentDay.plusDays(1);
         }
