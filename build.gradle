@@ -13,6 +13,7 @@ allprojects {
     repositories {
         jcenter()
         google()
+        maven { url 'https://github.com/WickeDev/stetho-realm/raw/master/maven-repo' }
     }
 }
 

@@ -5,6 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.db.chart.model.LineSet;
+import com.db.chart.renderer.AxisRenderer;
+import com.db.chart.view.LineChartView;
+import com.google.common.collect.Lists;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
@@ -35,6 +40,8 @@ public class RatesHolder extends RecyclerView.ViewHolder {
     TextView currencyCode;
     @BindView(R.id.weeklyRates)
     ConstraintLayout weeklyRates;
+    @BindView(R.id.ratesChart)
+    LineChartView ratesChart;
 
     private final List<TextView> weeklyRateValues = new ArrayList<>();
     private final List<TextView> dayOfWeekNames = new ArrayList<>();
@@ -54,8 +61,14 @@ public class RatesHolder extends RecyclerView.ViewHolder {
         currencyCode.setText(representCurrency);
 
         fillDayOfWeekNames(rate.getDate());
+        fillDailyRateValues(rate, weeklyRates);
+    }
 
+    private void fillDailyRateValues(Rate rate, List<Rate> weeklyRates) {
         DateTime currentDay = new DateTime(rate.getDate());
+        final LineSet rateSet = new LineSet();
+        float min = Float.MAX_VALUE;
+        float max = Float.MIN_VALUE;
         for (int i = weeklyRateValues.size() - 1, j = weeklyRates.size() - 1; i >= 0; i--) {
             final TextView dailyRateValue = weeklyRateValues.get(i);
 
@@ -63,13 +76,33 @@ public class RatesHolder extends RecyclerView.ViewHolder {
             if (j >= 0) {
                 final Rate dailyRate = weeklyRates.get(j);
                 if (dailyRate.getDate().equals(currentDay.toDate())) {
-                    dailyRateValue.setText(numericRepresenter.representWithTwoDecimalPlaces(dailyRate.getValue()));
+                    final String dailyRateText = numericRepresenter.representWithTwoDecimalPlaces(
+                            dailyRate.getValue()
+                    );
+                    dailyRateValue.setText(dailyRateText);
+                    float floatValue = Float.parseFloat(dailyRate.getValue());
+                    rateSet.addPoint("", floatValue);
+
+                    min = Math.min(min, floatValue);
+                    max = Math.max(max, floatValue);
+
                     j--;
                 }
             }
             currentDay = currentDay.minusDays(1);
         }
 
+        ratesChart.getData().clear();
+        ratesChart.addData(rateSet);
+        ratesChart.setXAxis(false);
+        float offset = (max - min) / 2f;
+        if (offset == 0f) {
+            offset = 0.01f;
+        }
+        float minAxis = Math.max(min - offset, 0f);
+        float maxAxis = max + offset;
+        ratesChart.setAxisBorderValues(minAxis, maxAxis, (maxAxis - minAxis) / 3);
+        ratesChart.show();
     }
 
     private void fillDayOfWeekNames(Date lastWeekDay) {
@@ -89,7 +122,12 @@ public class RatesHolder extends RecyclerView.ViewHolder {
         for (int i = 0; i < DateTimeConstants.DAYS_PER_WEEK; i++) {
             final View daily = createDailyRate(inflater, weeklyRates);
             dailyRates.add(daily);
-            weeklyRates.addView(daily, new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            weeklyRates.addView(
+                    daily,
+                    new ConstraintLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+            );
         }
 
         final ConstraintSet constraintSet = createConstraintSetForHorizontalChain(weeklyRates, dailyRates);
@@ -106,8 +144,10 @@ public class RatesHolder extends RecyclerView.ViewHolder {
         final ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(weeklyRates);
         constraintSet.createHorizontalChain(
-                weeklyRates.getId(), ConstraintSet.LEFT, weeklyRates.getId(), ConstraintSet.RIGHT,
-                chainIds, null, ConstraintSet.CHAIN_SPREAD_INSIDE);
+                weeklyRates.getId(), ConstraintSet.LEFT,
+                weeklyRates.getId(), ConstraintSet.RIGHT,
+                chainIds, null, ConstraintSet.CHAIN_SPREAD_INSIDE
+        );
         return constraintSet;
     }
 
