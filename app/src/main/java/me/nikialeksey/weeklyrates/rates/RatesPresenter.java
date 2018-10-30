@@ -1,23 +1,23 @@
 package me.nikialeksey.weeklyrates.rates;
 
-import android.support.annotation.NonNull;
-
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import me.nikialeksey.weeklyrates.rates.api.deserializers.RateDateFormatter;
 import me.nikialeksey.weeklyrates.rates.api.entities.Rate;
 import me.nikialeksey.weeklyrates.rates.api.rest.RatesApi;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 class RatesPresenter extends MvpBasePresenter<RatesView> {
 
@@ -25,37 +25,50 @@ class RatesPresenter extends MvpBasePresenter<RatesView> {
     private final RateDateFormatter rateDateFormatter;
     private final RatesModel ratesModel;
     private final int daysCountForLoadingRates;
+    private final CompositeDisposable disposables;
 
-    RatesPresenter(final RatesApi api, final RateDateFormatter rateDateFormatter, final RatesModel ratesModel, final int daysCountForLoadingRates) {
+    RatesPresenter(
+            final RatesApi api,
+            final RateDateFormatter rateDateFormatter,
+            final RatesModel ratesModel,
+            final int daysCountForLoadingRates,
+            final CompositeDisposable disposables
+    ) {
         this.api = api;
         this.rateDateFormatter = rateDateFormatter;
         this.ratesModel = ratesModel;
         this.daysCountForLoadingRates = daysCountForLoadingRates;
+        this.disposables = disposables;
     }
 
     void load(final boolean pullToRefresh) {
-        if (isViewAttached()) {
-            getView().showLoading();
-
-            if (pullToRefresh) {
-                loadRemote();
-            } else {
-                loadLocal();
+        ifViewAttached(new ViewAction<RatesView>() {
+            @Override
+            public void run(@NonNull final RatesView view) {
+                view.showLoading();
+                if (pullToRefresh) {
+                    loadRemote();
+                } else {
+                    loadLocal();
+                }
             }
-        }
+        });
     }
 
     private void loadLocal() {
-        if (isViewAttached()) {
-            final List<Rate> actualRates = ratesModel.actualRates();
-            final Multimap<String, Rate> weeklyRates = getWeeklyRates(actualRates);
+        ifViewAttached(new ViewAction<RatesView>() {
+            @Override
+            public void run(@NonNull final RatesView view) {
+                final List<Rate> actualRates = ratesModel.actualRates();
+                final Multimap<String, Rate> weeklyRates = getWeeklyRates(actualRates);
 
-            if (actualRates.isEmpty()) {
-                loadRemote();
-            } else {
-                getView().setData(actualRates, weeklyRates);
+                if (actualRates.isEmpty()) {
+                    loadRemote();
+                } else {
+                    view.setData(actualRates, weeklyRates);
+                }
             }
-        }
+        });
     }
 
     private void loadRemote() {
@@ -69,38 +82,43 @@ class RatesPresenter extends MvpBasePresenter<RatesView> {
             currentDay = currentDay.plusDays(1);
         }
 
-        Observable.merge(rateRequests)
-                .toList()
-                .map(new Func1<List<List<Rate>>, List<Rate>>() {
-                    @Override
-                    public List<Rate> call(final List<List<Rate>> ratesLists) {
-                        final List<Rate> allRates = new ArrayList<>();
-                        for (final List<Rate> rates : ratesLists) {
-                            for (final Rate rate : rates) {
-                                allRates.add(rate);
+        disposables.add(
+                Observable.merge(rateRequests)
+                        .toList()
+                        .map(new Function<List<List<Rate>>, List<Rate>>() {
+                            @Override
+                            public List<Rate> apply(final List<List<Rate>> ratesLists) {
+                                final List<Rate> allRates = new ArrayList<>();
+                                for (final List<Rate> rates : ratesLists) {
+                                    allRates.addAll(rates);
+                                }
+                                return allRates;
                             }
-                        }
-                        return allRates;
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Rate>>() {
-                    @Override
-                    public void call(final List<Rate> rates) {
-                        if (isViewAttached()) {
-                            ratesModel.save(rates);
-
-                            loadLocal();
-                        }
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(final Throwable throwable) {
-                        if (isViewAttached()) {
-                            getView().showErrorLoadingMessage();
-                        }
-                    }
-                });
+                        })
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<List<Rate>>() {
+                            @Override
+                            public void accept(final List<Rate> rates) {
+                                ifViewAttached(new ViewAction<RatesView>() {
+                                    @Override
+                                    public void run(@NonNull final RatesView view) {
+                                        ratesModel.save(rates);
+                                        loadLocal();
+                                    }
+                                });
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(final Throwable throwable) {
+                                ifViewAttached(new ViewAction<RatesView>() {
+                                    @Override
+                                    public void run(@NonNull final RatesView view) {
+                                        view.showErrorLoadingMessage();
+                                    }
+                                });
+                            }
+                        })
+        );
     }
 
     @NonNull

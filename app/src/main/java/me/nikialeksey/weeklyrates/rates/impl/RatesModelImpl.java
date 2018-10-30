@@ -44,7 +44,8 @@ public class RatesModelImpl implements RatesModel {
     public List<Rate> weeklyRatesByRate(final Rate rate) {
         final List<Rate> weeklyRates = realm.where(Rate.class)
                 .equalTo("currency", rate.getCurrency())
-                .findAllSorted("date", Sort.DESCENDING);
+                .findAll()
+                .sort("date", Sort.DESCENDING);
 
         return Lists.reverse(weeklyRates.subList(0, Math.min(weeklyRates.size(), DateTimeConstants.DAYS_PER_WEEK)));
     }
