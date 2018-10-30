@@ -1,9 +1,5 @@
 package me.nikialeksey.weeklyrates.rates.impl;
 
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +14,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.nikialeksey.weeklyrates.R;
@@ -116,8 +116,8 @@ public class RatesHolder extends RecyclerView.ViewHolder {
         final View daily = inflater.inflate(R.layout.daily_rate_view, weeklyRates, false);
         daily.setId(View.generateViewId());
 
-        final TextView day = ButterKnife.findById(daily, R.id.day);
-        final TextView value = ButterKnife.findById(daily, R.id.value);
+        final TextView day = daily.findViewById(R.id.day);
+        final TextView value = daily.findViewById(R.id.value);
         weeklyRateValues.add(value);
         dayOfWeekNames.add(day);
 

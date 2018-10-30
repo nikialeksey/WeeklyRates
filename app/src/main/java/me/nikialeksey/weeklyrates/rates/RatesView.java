@@ -1,7 +1,7 @@
 package me.nikialeksey.weeklyrates.rates;
 
 import com.google.common.collect.Multimap;
-import com.hannesdorfmann.mosby.mvp.MvpView;
+import com.hannesdorfmann.mosby3.mvp.MvpView;
 
 import java.util.List;
 

@@ -1,6 +1,5 @@
 package me.nikialeksey.weeklyrates.rates.impl;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,8 @@ import com.google.common.collect.Multimap;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import me.nikialeksey.weeklyrates.R;
 import me.nikialeksey.weeklyrates.rates.RatesAdapter;
 import me.nikialeksey.weeklyrates.rates.api.entities.Rate;
@@ -37,6 +38,7 @@ public class RatesAdapterImpl extends RecyclerView.Adapter<RatesHolder> implemen
         return rates.isEmpty();
     }
 
+    @NonNull
     @Override
     public RatesHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
         final View rateView = LayoutInflater.from(parent.getContext()).inflate(R.layout.rate_view, parent, false);

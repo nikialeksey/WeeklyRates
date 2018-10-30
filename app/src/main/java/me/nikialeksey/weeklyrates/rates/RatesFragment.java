@@ -1,21 +1,15 @@
 package me.nikialeksey.weeklyrates.rates;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.common.collect.Multimap;
-import com.hannesdorfmann.mosby.mvp.MvpFragment;
+import com.hannesdorfmann.mosby3.mvp.MvpFragment;
 
 import org.joda.time.LocalDate;
 
@@ -24,8 +18,14 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
 import io.realm.Realm;
 import me.nikialeksey.weeklyrates.R;
 import me.nikialeksey.weeklyrates.WeeklyRatesApp;
@@ -62,6 +62,12 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter>
     private RatesAdapter ratesAdapter;
     private Snackbar snackbar;
 
+    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        WeeklyRatesApp.getApplicationComponent().inject(this);
+        super.onCreate(savedInstanceState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
@@ -70,7 +76,6 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter>
 
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
-        WeeklyRatesApp.getApplicationComponent().inject(this);
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
@@ -92,7 +97,9 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter>
     @NonNull
     @Override
     public RatesPresenter createPresenter() {
-        return new RatesPresenter(ratesApi, rateDateFormatter, ratesModel, daysCountForLoadingRates);
+        return new RatesPresenter(
+                ratesApi, rateDateFormatter, ratesModel, daysCountForLoadingRates, new CompositeDisposable()
+        );
     }
 
     @Override
