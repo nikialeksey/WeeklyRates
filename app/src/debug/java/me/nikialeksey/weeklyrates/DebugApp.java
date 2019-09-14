@@ -7,13 +7,13 @@ public class DebugApp extends WeeklyRatesApp {
     @Override
     public void onCreate() {
         super.onCreate();
-        Stetho.initialize(
+        Stetho.initialize (
                 Stetho.newInitializerBuilder(this)
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                         .enableWebKitInspector(
-                                RealmInspectorModulesProvider.builder(this).build()
+                                                        RealmInspectorModulesProvider.builder(this).build()
                         )
                         .build()
-        );
+        );;
     }
 }

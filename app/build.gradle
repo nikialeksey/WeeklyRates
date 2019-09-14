@@ -1,13 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
+apply plugin: 'jacoco-android'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "me.nikialeksey.weeklyrates"
         minSdkVersion 22
-        targetSdkVersion 28
+        targetSdkVersion 29
         multiDexEnabled true
         versionCode 2
         versionName "0.0.2"
@@ -22,13 +23,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     packagingOptions {
         pickFirst 'META-INF/LICENSE'
     }
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
@@ -38,8 +43,8 @@ dependencies {
     implementation 'com.hannesdorfmann.mosby3:mvp:3.1.0'
     implementation 'com.hannesdorfmann.mosby3:viewstate:3.1.0'
 
-    implementation 'com.jakewharton:butterknife:9.0.0-rc1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc1'
+    implementation 'com.jakewharton:butterknife:10.2.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
 
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
@@ -57,7 +62,7 @@ dependencies {
 
     implementation 'com.diogobernardino:williamchart:2.5.0'
 
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     testImplementation 'junit:junit:4.12'
 
     debugImplementation 'com.facebook.stetho:stetho:1.5.0'

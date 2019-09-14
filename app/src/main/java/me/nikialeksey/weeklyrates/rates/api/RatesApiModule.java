@@ -34,7 +34,10 @@ public class RatesApiModule {
         final TypeToken<List<Rate>> ratesTypeToken = new TypeToken<List<Rate>>() {
         };
 
-        ratesDeserializerModule.addDeserializer(ratesTypeToken.getRawType(), new RatesDeserializer(rateDateFormatter));
+        ratesDeserializerModule.addDeserializer(
+                ratesTypeToken.getRawType(),
+                new RatesDeserializer(rateDateFormatter)
+        );
 
         final ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(ratesDeserializerModule);
@@ -43,7 +46,10 @@ public class RatesApiModule {
 
     @Provides
     @Singleton
-    RatesApi provideRatesApi(final Retrofit.Builder retrofitBuilder, final ObjectMapper objectMapper) {
+    RatesApi provideRatesApi(
+            final Retrofit.Builder retrofitBuilder,
+            final ObjectMapper objectMapper
+    ) {
         final Retrofit retrofit = retrofitBuilder
                 .addConverterFactory(JacksonConverterFactory.create(objectMapper))
                 .build();

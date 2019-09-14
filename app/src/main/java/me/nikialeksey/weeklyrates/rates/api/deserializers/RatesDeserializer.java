@@ -24,7 +24,10 @@ public class RatesDeserializer extends JsonDeserializer<List<Rate>> {
     }
 
     @Override
-    public List<Rate> deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public List<Rate> deserialize(
+            final JsonParser p,
+            final DeserializationContext ctxt
+    ) throws IOException {
         final JsonNode node = p.getCodec().readTree(p);
 
         final String dateText = node.get("date").asText();

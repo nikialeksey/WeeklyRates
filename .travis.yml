@@ -13,9 +13,9 @@ cache:
 
 env:
  global:
- - ANDROID_API=28
+ - ANDROID_API=29
  - EMULATOR_API=22
- - ANDROID_BUILD_TOOLS=28.0.3
+ - ANDROID_BUILD_TOOLS=29.0.2
  - ADB_INSTALL_TIMEOUT=5 # minutes
 
  licenses:
@@ -28,7 +28,7 @@ before_install:
   - mkdir "$ANDROID_HOME/licenses" || true
   - echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
   # Install the rest of tools (e.g., avdmanager)
-  - sdkmanager tools
+  - yes | sdkmanager tools
   # Install the system image
   - sdkmanager "system-images;android-18;default;armeabi-v7a"
   # Create and start emulator for the script. Meant to race the install task.
@@ -36,7 +36,7 @@ before_install:
   - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
 
 script:
-- ./gradlew clean test
+- ./gradlew clean checkstyle jacocoTestReport
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
