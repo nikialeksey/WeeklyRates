@@ -35,7 +35,9 @@ public class RatesModelImpl implements RatesModel {
     @Override
     public List<Rate> actualRates() {
         final Date maximumDate = realm.where(Rate.class).maximumDate("date");
-        if (maximumDate == null) return Collections.emptyList();
+        if (maximumDate == null) {
+            return Collections.emptyList();
+        }
 
         return realm.where(Rate.class).equalTo("date", maximumDate).findAll();
     }
@@ -47,7 +49,12 @@ public class RatesModelImpl implements RatesModel {
                 .findAll()
                 .sort("date", Sort.DESCENDING);
 
-        return Lists.reverse(weeklyRates.subList(0, Math.min(weeklyRates.size(), DateTimeConstants.DAYS_PER_WEEK)));
+        return Lists.reverse(
+                weeklyRates.subList(
+                        0,
+                        Math.min(weeklyRates.size(), DateTimeConstants.DAYS_PER_WEEK)
+                )
+        );
     }
 
 }

@@ -70,7 +70,11 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter>
 
     @Nullable
     @Override
-    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
+    public View onCreateView(
+            final LayoutInflater inflater,
+            @Nullable final ViewGroup container,
+            @Nullable final Bundle savedInstanceState
+    ) {
         return inflater.inflate(R.layout.rates_fragment, container, false);
     }
 
@@ -80,7 +84,6 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter>
         ButterKnife.bind(this, view);
 
         realm = Realm.getDefaultInstance();
-        // TODO нужно вынести в отдельное поведение и сделать обновление рилма в базовом классе, например
         ratesModel.updateRealmInstance(realm);
 
         snackbar = Snackbar.make(ratesView, "", Snackbar.LENGTH_INDEFINITE);
@@ -98,7 +101,11 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter>
     @Override
     public RatesPresenter createPresenter() {
         return new RatesPresenter(
-                ratesApi, rateDateFormatter, ratesModel, daysCountForLoadingRates, new CompositeDisposable()
+                ratesApi,
+                rateDateFormatter,
+                ratesModel,
+                daysCountForLoadingRates,
+                new CompositeDisposable()
         );
     }
 
@@ -107,7 +114,9 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter>
         ratesAdapter.changeRates(rates, weeklyRates);
         ratesRefreshLayout.setRefreshing(false);
 
-        final String date = rateDateFormatter.formatLocalDate(new LocalDate(rates.get(0).getDate()));
+        final String date = rateDateFormatter.formatLocalDate(
+                new LocalDate(rates.get(0).getDate())
+        );
         showMessage(R.string.syncingAtDate, date);
     }
 
@@ -161,7 +170,7 @@ public class RatesFragment extends MvpFragment<RatesView, RatesPresenter>
         }
     }
 
-    private void showMessage(final int messageId, final Object ...args) {
+    private void showMessage(final int messageId, final Object... args) {
         final String message = getContext().getString(messageId, args);
         snackbar = Snackbar.make(ratesView, message, Snackbar.LENGTH_INDEFINITE);
         snackbar.show();

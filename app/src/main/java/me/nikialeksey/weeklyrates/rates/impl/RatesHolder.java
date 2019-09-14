@@ -106,7 +106,9 @@ public class RatesHolder extends RecyclerView.ViewHolder {
     }
 
     private void fillDayOfWeekNames(Date lastWeekDay) {
-        DateTime currentDay = new DateTime(lastWeekDay).minusDays(DateTimeConstants.DAYS_PER_WEEK).plusDays(1);
+        DateTime currentDay = new DateTime(lastWeekDay).minusDays(
+                DateTimeConstants.DAYS_PER_WEEK
+        ).plusDays(1);
         for (int i = 0; i < dayOfWeekNames.size(); i++) {
             TextView dayOfWeekName = dayOfWeekNames.get(i);
             dayOfWeekName.setText(currentDay.dayOfWeek().getAsShortText());
@@ -125,17 +127,24 @@ public class RatesHolder extends RecyclerView.ViewHolder {
             weeklyRates.addView(
                     daily,
                     new ConstraintLayout.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
                     )
             );
         }
 
-        final ConstraintSet constraintSet = createConstraintSetForHorizontalChain(weeklyRates, dailyRates);
+        final ConstraintSet constraintSet = createConstraintSetForHorizontalChain(
+                weeklyRates,
+                dailyRates
+        );
         constraintSet.applyTo(weeklyRates);
     }
 
     @NonNull
-    private ConstraintSet createConstraintSetForHorizontalChain(final ConstraintLayout weeklyRates, final List<View> dailyRates) {
+    private ConstraintSet createConstraintSetForHorizontalChain(
+            final ConstraintLayout weeklyRates,
+            final List<View> dailyRates
+    ) {
         final int[] chainIds = new int[dailyRates.size()];
         for (int i = 0; i < DateTimeConstants.DAYS_PER_WEEK; i++) {
             chainIds[i] = dailyRates.get(i).getId();
@@ -152,7 +161,10 @@ public class RatesHolder extends RecyclerView.ViewHolder {
     }
 
     @NonNull
-    private View createDailyRate(final LayoutInflater inflater, final ConstraintLayout weeklyRates) {
+    private View createDailyRate(
+            final LayoutInflater inflater,
+            final ConstraintLayout weeklyRates
+    ) {
         final View daily = inflater.inflate(R.layout.daily_rate_view, weeklyRates, false);
         daily.setId(View.generateViewId());
 

@@ -41,7 +41,9 @@ public class RatesAdapterImpl extends RecyclerView.Adapter<RatesHolder> implemen
     @NonNull
     @Override
     public RatesHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        final View rateView = LayoutInflater.from(parent.getContext()).inflate(R.layout.rate_view, parent, false);
+        final View rateView = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.rate_view, parent, false
+        );
         return new RatesHolder(rateView);
     }
 

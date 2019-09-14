@@ -30,7 +30,9 @@ public class NetworkModule {
     @Singleton
     X509TrustManager provideTrustManager() {
         try {
-            final TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            final TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(
+                    TrustManagerFactory.getDefaultAlgorithm()
+            );
             trustManagerFactory.init((KeyStore) null);
 
             final TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
@@ -40,9 +42,9 @@ public class NetworkModule {
             }
 
             return (X509TrustManager) trustManagers[0];
-        } catch (KeyStoreException | NoSuchAlgorithmException ignored) {
+        } catch (KeyStoreException | NoSuchAlgorithmException e) {
+            throw new IllegalStateException("Could not create trust manager.", e);
         }
-        return null;
     }
 
     @Provides
@@ -52,27 +54,37 @@ public class NetworkModule {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[]{trustManager}, null);
             return sslContext.getSocketFactory();
-        } catch (NoSuchAlgorithmException | KeyManagementException ignored) {
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new IllegalStateException("Could not create ssl socket factory", e);
         }
-        return null;
     }
 
     @Provides
     @Singleton
-    OkHttpClient provideOkHttpClient(final SSLSocketFactory sslSocketFactory, final X509TrustManager trustManager) {
+    OkHttpClient provideOkHttpClient(
+            final SSLSocketFactory sslSocketFactory,
+            final X509TrustManager trustManager
+    ) {
         return new OkHttpClient.Builder()
                 .sslSocketFactory(sslSocketFactory, trustManager)
-                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                .addInterceptor(new HttpLoggingInterceptor().setLevel(
+                        HttpLoggingInterceptor.Level.BODY
+                ))
                 .build();
     }
 
 
     @Provides
     @Singleton
-    Retrofit.Builder provideRetrofitBuilder(final OkHttpClient okHttpClient, @Named("baseUrl") final String baseUrl) {
+    Retrofit.Builder provideRetrofitBuilder(
+            final OkHttpClient okHttpClient,
+            @Named("baseUrl") final String baseUrl
+    ) {
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(okHttpClient)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()));
+                .addCallAdapterFactory(
+                        RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io())
+                );
     }
 }
