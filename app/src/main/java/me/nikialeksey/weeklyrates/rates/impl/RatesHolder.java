@@ -6,9 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.db.chart.model.LineSet;
-import com.db.chart.renderer.AxisRenderer;
 import com.db.chart.view.LineChartView;
-import com.google.common.collect.Lists;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
